@@ -2,7 +2,7 @@
 
 Step 2 scope: wire `/health` and `/explain` only. No database.
 The `/explain` endpoint is a stub here; Step 3 wires it to
-`reasoning.reasoning_service` (Ollama + Kimi).
+`reasoning.reasoning_service` (Ollama + Llama 3.3).
 """
 
 from fastapi import FastAPI

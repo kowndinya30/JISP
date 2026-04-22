@@ -1,7 +1,7 @@
 """Reasoning routes.
 
 Step 2: exposes `/explain` as a stub. Step 3 will replace the stub body
-with a call into `reasoning.reasoning_service` (Ollama + Kimi). No
+with a call into `reasoning.reasoning_service` (Ollama + Llama 3.3). No
 prediction or scoring — explanation only.
 """
 
@@ -18,7 +18,7 @@ def explain(request: ExplainRequest) -> ExplainResponse:
         subject=request.subject,
         explanation=(
             "Reasoning service is not wired yet (Step 2 stub). "
-            "Ollama + Kimi integration lands in Step 3."
+            "Ollama + Llama 3.3 integration lands in Step 3."
         ),
         model=None,
     )

@@ -11,5 +11,5 @@ High-level flow (pre-field only):
 4. `geoai/` computes spatial/temporal features, runs change detection and
    risk models.
 5. `reasoning/` turns model outputs into human-readable explanations
-   using Ollama + Kimi.
+   using Ollama + Llama 3.3.
 6. `api/` exposes FastAPI endpoints consumed by `ui/` dashboards and maps.

@@ -31,7 +31,7 @@
 
 - SHAP
 - Ollama
-- Kimi LLM
+- Llama 3.3
 
 ## APIs
 

@@ -16,7 +16,7 @@ execution and provides intelligence, prioritization, and reasoning.
 | `spatial/`     | PostGIS, assets, geometry ONLY                           |
 | `timeseries/`  | TimescaleDB time-series ONLY                             |
 | `geoai/`       | Spatial AI & change detection ONLY                       |
-| `reasoning/`   | Explanation & reasoning ONLY (Ollama + Kimi)             |
+| `reasoning/`   | Explanation & reasoning ONLY (Ollama + Llama 3.3)        |
 | `api/`         | FastAPI endpoints ONLY                                   |
 | `ui/`          | Visualization ONLY                                       |
 
