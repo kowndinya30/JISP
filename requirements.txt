@@ -4,3 +4,8 @@
 # GDAL/OGR, GeoPandas, Rasterio, xarray, scikit-learn, PySAL, HDBSCAN/DBSCAN,
 # OpenGeoAI, OpenCL (PyOpenCL/Numba), SHAP, Ollama, Kimi LLM, FastAPI, Pydantic,
 # MapLibre GL JS (frontend), Streamlit.
+
+# --- Step 2: minimal FastAPI app ---
+fastapi>=0.110
+pydantic>=2.6
+uvicorn[standard]>=0.29  # ASGI server required to run FastAPI
