@@ -1,8 +1,8 @@
 """JISP FastAPI entrypoint.
 
-Step 2 scope: wire `/health` and `/explain` only. No database.
-The `/explain` endpoint is a stub here; Step 3 wires it to
-`reasoning.reasoning_service` (Ollama + Llama 3.3).
+Current scope: `/health` and `/explain`. No database.
+`/explain` is wired to `reasoning.reasoning_service` (Ollama + Llama 3.3);
+see `api/routes/reasoning.py`.
 """
 
 from fastapi import FastAPI
