@@ -1,2 +1,95 @@
-# JISP docker-compose placeholder — to be implemented in Step 4 with GPU
-# support for Docker Desktop (NVIDIA Container Toolkit where applicable).
+# JISP local-only stack for Docker Desktop.
+#
+# Step 4 scope: run JISP API + Ollama with GPU acceleration.
+#   - `ollama`       : Ollama server (GPU-enabled via NVIDIA Container Toolkit)
+#   - `ollama-init`  : one-shot sidecar that pulls `llama3.3` on first boot
+#   - `api`          : JISP FastAPI service (built from docker/api.Dockerfile)
+#
+# `db` and `geoai` Dockerfiles exist in this folder per the approved
+# structure; their compose services will be added in a later step.
+#
+# Run from the repository root:
+#     docker compose -f docker/docker-compose.yml up --build
+#
+# Environment overrides are read from a `.env` at the repo root
+# (see `.env.example`). The model pull is 40+ GB on first boot; subsequent
+# starts reuse the `ollama-data` named volume.
+#
+# GPU NOTE
+# --------
+# The `ollama` service declares an NVIDIA GPU reservation via the
+# `deploy.resources.reservations.devices` block below. This requires
+# NVIDIA Container Toolkit installed on the host. On machines without
+# an NVIDIA GPU, comment out that block to fall back to CPU-only
+# execution (not recommended per the JISP spec, but unblocks dev).
+
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: jisp-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # One-shot pull of the reasoning model. Exits 0 after the pull
+  # completes. The API waits for this to finish before starting so the
+  # first /explain call has a real model to talk to.
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: jisp-ollama-init
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        MODEL="${JISP_OLLAMA_MODEL:-llama3.3}"
+        echo "[jisp] pulling $$MODEL ..."
+        ollama pull "$$MODEL"
+        echo "[jisp] $$MODEL ready"
+    restart: "no"
+
+  api:
+    build:
+      context: ..
+      dockerfile: docker/api.Dockerfile
+    container_name: jisp-api
+    ports:
+      - "8000:8000"
+    environment:
+      JISP_OLLAMA_HOST: http://ollama:11434
+      JISP_OLLAMA_MODEL: ${JISP_OLLAMA_MODEL:-llama3.3}
+      JISP_OLLAMA_TIMEOUT_SECONDS: ${JISP_OLLAMA_TIMEOUT_SECONDS:-60}
+    depends_on:
+      ollama:
+        condition: service_healthy
+      ollama-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).status == 200 else 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  ollama-data:
