@@ -32,7 +32,7 @@ JISP is a pre-field, cloud-native spatial intelligence platform.
 - **Spatial & Time-Series Core**: PostgreSQL, PostGIS, TimescaleDB
 - **Geospatial Processing**: GDAL/OGR, GeoPandas, Rasterio, xarray
 - **GeoAI**: scikit-learn, PySAL, HDBSCAN/DBSCAN, OpenGeoAI, OpenCL (via PyOpenCL or Numba)
-- **Explainability & Reasoning**: SHAP, Ollama, Kimi LLM
+- **Explainability & Reasoning**: SHAP, Ollama, Llama 3.3
 - **APIs**: FastAPI, Pydantic
 - **Visualization**: MapLibre GL JS, Streamlit
 - **Containerization (local only)**: Docker, Docker Compose, Docker Desktop

@@ -1,0 +1,34 @@
+# Keep build context small. The API image only needs `api/`, `reasoning/`,
+# `config/`, and `requirements.txt`; the GeoAI and DB images use their own
+# explicit COPY directives. Anything below is excluded from all build contexts.
+
+.git
+.gitignore
+.dockerignore
+
+.env
+.env.*
+!.env.example
+
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+
+.venv
+venv
+env
+
+data
+docs
+tests
+ui
+scripts
+
+*.md
+!README.md
